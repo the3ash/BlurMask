@@ -1,65 +1,48 @@
+# BlurMask for SwiftUI
 
-![VariableBlur](https://github.com/user-attachments/assets/accdd9d2-4c8a-4970-bce0-00842a47ff87)
+![screenshot](./screenshot.png)
 
-# VariableBlur
+Add blur effect mask to your SwiftUI views.
 
-SwiftUI variable blur (progressive blur)  
-
-_First of all, all hard work was done by **[jtrivedi](https://github.com/jtrivedi/VariableBlurView)** - I just made some minor adjustments._
+> Highly based on [VariableBlur](https://github.com/nikstar/VariableBlur) by @nikstar
 
 Changes in this version:
 
-- [x] all code is in **one file**
-- [x] dynamically generates gradient image allowing for further adjustments
-- [x] fixes crash when switching between light and dark mode
-- [x] supports upside down variable blurs (clear at the top, blurred at the bottom)
+- **Removed gradient blur capability** - no more directional blur transitions from VariableBlur
+- **Simplified to uniform blur only** - consistent blur intensity across entire masked area
+- **Streamlined API** - reduced from complex parameters (direction, startOffset) to simple radius control
+- **Eliminated gradient mask generation** - no more CIFilter.linearGradient() calculations for better performance
 
-Use of private API did not trigger App Store rejection for me but do tell if it does for you. 
-
+🟡 Uses private APIs like VariableBlur - potential App Store rejection risk.
 
 ## Install
 
-### Recommended
+Copy [BlurMask.swift](BlurMask.swift) to your project.
 
-Copy [VariableBlur.swift](https://github.com/nikstar/VariableBlur/blob/main/Sources/VariableBlur/VariableBlur.swift) to your project.
-
-### SPM
-
-To add a package dependency to your Xcode project, select File > Add Package and enter this repository's URL (<https://github.com/nikstar/VariableBlur>).
-
-## Example
-
-Used to create image on top of this page:
+## Usage
 
 ```swift
+// Basic
+BlurMask()                // Default radius: 24
+BlurMask(blurRadius: 12)  // custom radius
+
+// View modifier
+view.blurMask(radius: 24)
+
+// Navigation bar with blur example
 ZStack(alignment: .top) {
-    Color.white
-    Color.blue.opacity(0.3)
-    Image("im")
-        .resizable()
-        .aspectRatio(contentMode: .fit)
-        .padding(.horizontal, 50)
-    Text("VariableBlur")
-        .font(.largeTitle.monospaced().weight(.bold))
-        .padding(.top, 230)
-        .foregroundStyle(.white.opacity(0.9))
-}
-.overlay(alignment: .top) {
-    VariableBlurView(maxBlurRadius: 20, direction: .blurredTopClearBottom)
-        .frame(height: 200)
-}
-.ignoresSafeArea()
-```
-
-Blur matching status bar/cutout safe area:
-
-```swift
-ContentView()
-    .overlay(alignment: .top) {
-        GeometryReader { geom in
-            VariableBlurView(maxBlurRadius: 10)
-                .frame(height: geom.safeAreaInsets.top)
-                .ignoresSafeArea()
-        }
+  ScrollView {
+    // Some content
     }
+    .padding(.top, navBarHeight)
+  }
+  Text("Nav Bar")
+    .frame(height: navBarHeight)
+    .background(
+      BlurMask()
+        .ignoresSafeArea(edges: .top)
+    )
+}
 ```
+
+Check [ExampleView.swift](ExampleView.swift) for more examples.
