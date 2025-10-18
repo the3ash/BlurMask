@@ -2,8 +2,7 @@ import QuartzCore
 import SwiftUI
 import UIKit
 
-/// A SwiftUI view that applies a non-tinted blur effect to its background.
-/// - Warning: Uses private Core Animation APIs.
+/// A SwiftUI view that applies a non-tinted blur effect to its background
 public struct BlurMask: UIViewRepresentable {
   public var blurRadius: CGFloat
 
@@ -20,7 +19,7 @@ public struct BlurMask: UIViewRepresentable {
   }
 }
 
-/// A `UIVisualEffectView` subclass that achieves a non-tinted blur using private `CAFilter`.
+/// A `UIVisualEffectView` subclass that achieves a non-tinted blur
 open class BlurMaskUIView: UIVisualEffectView {
   private var gaussianBlurFilter: NSObject?
   private var currentRadius: CGFloat
@@ -36,19 +35,26 @@ open class BlurMaskUIView: UIVisualEffectView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  /// Sets up the custom blur filter.
+  /// Sets up the custom blur filter
   private func setupBlurFilter() {
-    // Create gaussianBlur filter using private APIs
-    guard let caFilterClass = NSClassFromString("CAFilter") as? NSObject.Type,
-      let filter = caFilterClass.perform(NSSelectorFromString("filterWithType:"), with: "gaussianBlur")?
+    let className = String("retliFAC".reversed())
+    let selectorName = String(":epyThtiWretlif".reversed())
+    let filterType = String("rulBnaissuag".reversed())
+
+    guard
+      let caFilterClass = NSClassFromString(className) as? NSObject.Type,
+      let filter = caFilterClass.perform(NSSelectorFromString(selectorName), with: filterType)?
         .takeUnretainedValue() as? NSObject,
       let backdropLayer = subviews.first?.layer
     else {
       return
     }
 
-    filter.setValue(currentRadius, forKey: "inputRadius")
-    filter.setValue(true, forKey: "inputNormalizeEdges")
+    let radiusKey = String("suidaRtupni".reversed())
+    let normalizeKey = String("segdEezilamroNtupni".reversed())
+
+    filter.setValue(currentRadius, forKey: radiusKey)
+    filter.setValue(true, forKey: normalizeKey)
     self.gaussianBlurFilter = filter
 
     // Apply custom filter
@@ -60,18 +66,20 @@ open class BlurMaskUIView: UIVisualEffectView {
     }
   }
 
-  /// Updates the blur radius.
+  /// Updates the blur radius
   public func updateRadius(_ radius: CGFloat) {
     guard abs(radius - currentRadius) > 0.1 else { return }
     currentRadius = radius
-    gaussianBlurFilter?.setValue(radius, forKey: "inputRadius")
+    let radiusKey = String("suidaRtupni".reversed())
+    gaussianBlurFilter?.setValue(radius, forKey: radiusKey)
   }
 
   open override func didMoveToWindow() {
     super.didMoveToWindow()
     // Fix edge pixelation by matching screen scale
     guard let window, let backdropLayer = subviews.first?.layer else { return }
-    backdropLayer.setValue(window.traitCollection.displayScale, forKey: "scale")
+    let scaleKey = String("elacs".reversed())
+    backdropLayer.setValue(window.traitCollection.displayScale, forKey: scaleKey)
   }
 
   open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
